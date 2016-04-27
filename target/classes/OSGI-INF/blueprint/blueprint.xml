@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+  <bean id="helloBean" class="com.redhat.iw.camel.postgres.HelloBean">
+      <property name="say" value="Hi from Camel"/>
+  </bean>
+  
+  <bean id="toSQL" class="com.redhat.iw.camel.postgres.SQLBean">
+  </bean>
+  
+  <!-- <bean id="myDB" class="org.postgresql.ds.PGSimpleDataSource">
+  		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql:ianwatson" />
+		<property name="username" value="ianwatson" />
+		<property name="password" value="" />
+  </bean> -->
+  
+  <bean id="myDB" class="org.postgresql.ds.PGPoolingDataSource" destroy-method="close">
+    <property name="serverName" value="localhost:5432/ianwatson"/>
+    <property name="user" value="ianwatson"/>
+    <property name="password" value=""/>
+    <property name="dataSourceName" value="ianwatson"/>
+    <property name="initialConnections" value="2"/>
+    <property name="maxConnections" value="4"/>
+  </bean>
+
+  <camelContext xmlns="http://camel.apache.org/schema/blueprint">
+    <route id="timerToLog">
+      <from uri="timer:foo?period=5000"/>
+      <to uri="bean:toSQL"/>
+      <to uri="jdbc:myDB"/>
+      <log message="Body -> ${body}"/>
+      <setBody>
+          <method ref="helloBean" method="hello"/>
+      </setBody>
+      <log message="The message contains ${body}"/>
+      <to uri="mock:result"/>
+    </route>
+  </camelContext>
+
+</blueprint>
