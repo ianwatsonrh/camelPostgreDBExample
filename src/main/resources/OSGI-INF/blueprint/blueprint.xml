@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
        xsi:schemaLocation="
        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+	<!-- osgi blueprint property placeholder -->
+    <cm:property-placeholder id="placeholder"
+                             persistent-id="org.fusesource.example.get.started">
+        <cm:default-properties>
+            <cm:property name="helloProp" value="helloThere!"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
 
   <bean id="helloBean" class="com.redhat.iw.camel.postgres.HelloBean">
       <property name="say" value="Hi from Camel"/>
@@ -31,6 +40,7 @@
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
     <route id="timerToLog">
       <from uri="timer:foo?period=5000"/>
+      <log message="Invoked! -> {{helloProp}}"/>
       <to uri="bean:toSQL"/>
       <to uri="jdbc:myDB"/>
       <log message="Body -> ${body}"/>
