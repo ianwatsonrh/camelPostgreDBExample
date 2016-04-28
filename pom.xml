@@ -73,7 +73,17 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
+      <artifactId>camel-groovy</artifactId>
+      <version>2.15.1.redhat-620133</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
       <artifactId>camel-blueprint</artifactId>
+      <version>2.15.1.redhat-620133</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-spark-rest</artifactId>
       <version>2.15.1.redhat-620133</version>
     </dependency>
 
@@ -95,11 +105,11 @@
     </dependency>
 
     <!-- Testing & Camel Plugin -->
- <!--    <dependency>
+    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test-blueprint</artifactId>
       <version>2.15.1.redhat-620133</version>
-    </dependency> -->
+    </dependency>
     
     <dependency>
   <groupId>org.apache.camel</groupId>
@@ -177,7 +187,6 @@
     	<version>1.2.0.redhat-621084</version>
 	<configuration>
 	  <profile>redhat-iw-databasetest</profile>
-          <parentProfiles>feature-camel</parentProfiles>
 	</configuration>
       </plugin>
 

@@ -6,7 +6,7 @@ package com.redhat.iw.camel.postgres;
 public class SQLBean {
 
     public String hello() {
-        return "select * from customer;";
+        return "select * from customer where customer_id = :?id;";
     }
 
 }

@@ -38,18 +38,25 @@
   </bean>
 
   <camelContext xmlns="http://camel.apache.org/schema/blueprint">
-    <route id="timerToLog">
-      <from uri="timer:foo?period=5000"/>
-      <log message="Invoked! -> {{helloProp}}"/>
-      <to uri="bean:toSQL"/>
-      <to uri="jdbc:myDB"/>
-      <log message="Body -> ${body}"/>
-      <setBody>
-          <method ref="helloBean" method="hello"/>
-      </setBody>
-      <log message="The message contains ${body}"/>
-      <to uri="mock:result"/>
-    </route>
-  </camelContext>
+  <restConfiguration component="spark-rest" port="9093"/>
+  
+  <rest>
+  	<get uri="customer/{id}">
+  		<to uri="direct:db"/>
+  	</get>
+  </rest>
+  
+  <route id="directDB">
+    <from uri="direct:db"/>
+    <log message="Invoked! -&gt; {{helloProp}}"/>
+    <log message="ID -&gt; ${header.id}"/>
+    <setHeader headerName="id">
+      <simple resultType="java.lang.Integer">${header.id}</simple>
+    </setHeader>
+    <to uri="bean:toSQL"/>
+    <to uri="jdbc:myDB?useHeadersAsParameters=true"/>
+    <log message="Body -&gt; ${body}"/>
+  </route>
+</camelContext>
 
 </blueprint>
